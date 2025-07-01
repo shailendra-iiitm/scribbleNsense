@@ -156,6 +156,7 @@ export default function Home() {
     };
 
     const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
+        setShowMemo(false); // Hide memo on any interaction
         const canvas = canvasRef.current;
         if (canvas) {
             const ctx = canvas.getContext('2d');
@@ -165,7 +166,6 @@ export default function Home() {
                 ctx.beginPath();
                 ctx.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
                 setIsDrawing(true);
-                setShowMemo(false);
             }
         }
     };
@@ -280,7 +280,7 @@ export default function Home() {
             <canvas
                 ref={canvasRef}
                 id="canvas"
-                className="absolute top-0 left-0 w-full h-full bg-black"
+                className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"
                 onMouseDown={startDrawing}
                 onMouseUp={stopDrawing}
                 onMouseMove={draw}
@@ -288,9 +288,7 @@ export default function Home() {
             />
             {showMemo && (
                 <div className='back'>
-                    <h1 className='mem'>Start Scribbling....</h1>
-                    <h1 className='highl'>Shift + Command + O → Run</h1>
-                    <h1 className='highl'>Shift + Command + E → Reset</h1>
+                    <h1 className='mem'>Start Scribbling...</h1>
                 </div>
             )}
             {latexExpr && latexExpr.map((latex, index) => (
