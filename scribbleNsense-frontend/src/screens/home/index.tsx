@@ -96,7 +96,7 @@ export default function Home() {
 
         if (canvas) {
             const response = await axios.post(
-                `${import.meta.env.VITE_API_URL}/calculate/upload-base64`,
+                `${import.meta.env.VITE_API_BASE_URL}/calculate/upload-base64`,
                 {
                     image: canvas.toDataURL('image/png'),
                     dict_of_vars: dictOfVars,
