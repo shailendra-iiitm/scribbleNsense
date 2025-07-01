@@ -170,6 +170,76 @@ export default function Home() {
         }
     };
 
+    // Touch event handlers for mobile and tablet
+    const startTouchDrawing = (e: React.TouchEvent<HTMLCanvasElement>) => {
+        e.preventDefault(); // Prevent scrolling
+        
+        // Only handle single touch to avoid multi-touch issues on tablets
+        if (e.touches.length !== 1) return;
+        
+        setShowMemo(false); // Hide memo on any interaction
+        const canvas = canvasRef.current;
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+                const rect = canvas.getBoundingClientRect();
+                const touch = e.touches[0];
+                
+                // Account for device pixel ratio for high-DPI tablets
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                
+                const x = (touch.clientX - rect.left) * scaleX;
+                const y = (touch.clientY - rect.top) * scaleY;
+                
+                ctx.lineWidth = brushSize;
+                ctx.strokeStyle = color;
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                setIsDrawing(true);
+            }
+        }
+    };
+
+    const drawTouch = (e: React.TouchEvent<HTMLCanvasElement>) => {
+        e.preventDefault(); // Prevent scrolling
+        
+        // Only handle single touch to avoid multi-touch issues on tablets
+        if (!isDrawing || e.touches.length !== 1) return;
+        
+        const canvas = canvasRef.current;
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+                const rect = canvas.getBoundingClientRect();
+                const touch = e.touches[0];
+                
+                // Account for device pixel ratio for high-DPI tablets
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                
+                const x = (touch.clientX - rect.left) * scaleX;
+                const y = (touch.clientY - rect.top) * scaleY;
+                
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            }
+        }
+    };
+
+    const stopTouchDrawing = (e: React.TouchEvent<HTMLCanvasElement>) => {
+        e.preventDefault(); // Prevent scrolling
+        setIsDrawing(false);
+        
+        const canvas = canvasRef.current;
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+                ctx.beginPath();
+            }
+        }
+    };
+
     const stopDrawing = () => {
         const canvas = canvasRef.current;
         if (canvas) {
@@ -280,15 +350,23 @@ export default function Home() {
             <canvas
                 ref={canvasRef}
                 id="canvas"
-                className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"
+                className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-gray-900 via-black to-gray-800"
                 onMouseDown={startDrawing}
                 onMouseUp={stopDrawing}
                 onMouseMove={draw}
                 onMouseLeave={stopDrawing}
+                onTouchStart={startTouchDrawing}
+                onTouchMove={drawTouch}
+                onTouchEnd={stopTouchDrawing}
+                onTouchCancel={stopTouchDrawing}
+                style={{ touchAction: 'none' }} // Prevent default touch behaviors
             />
             {showMemo && (
                 <div className='back'>
-                    <h1 className='mem'>Start Scribbling...</h1>
+                    <h1 className='mem'>
+                        Welcome!<br />
+                        Start Scribbling...
+                    </h1>
                 </div>
             )}
             {latexExpr && latexExpr.map((latex, index) => (

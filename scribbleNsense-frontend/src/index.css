@@ -78,7 +78,7 @@
   left: -20px;                /* Position the controls towards the left */
   top: 50%;                  /* Center vertically */
   z-index: 10;
-  transform: translateY(-50%)scale(0.5) ; /* Adjust for centering vertically */
+  transform: translateY(-50%) scale(0.5); /* Adjust for centering vertically */
   display: flex;
   flex-direction: column;    /* Stack items vertically */
   align-items: flex-start;   /* Align items to the left */
@@ -86,6 +86,67 @@
   -webkit-box-shadow: 6px 3px 39px 5px rgba(247,247,247,1);
   -moz-box-shadow: 6px 3px 39px 5px rgba(247,247,247,1);
   box-shadow: 6px 3px 39px 5px rgba(247,247,247,1);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .grid-container {
+    transform: translateY(-50%) scale(0.7); /* Slightly larger on mobile */
+    left: -10px; /* Closer to edge on mobile */
+  }
+  
+  .back {
+    max-width: 300px; /* Smaller on mobile */
+    padding: 18px 24px; /* Adjusted padding */
+    /* Remove the top override - let it inherit the 50% from main .back class */
+  }
+  
+  .mem {
+    font-size: 2rem; /* Smaller text on mobile */
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .grid-container {
+    transform: translateY(-50%) scale(0.8); /* Optimal size for tablets */
+    left: -15px; /* Better positioning for tablets */
+  }
+  
+  .custom-button {
+    padding: 3rem; /* Slightly smaller buttons for tablets */
+    font-size: 1.6rem;
+  }
+  
+  .color-swatch {
+    width: 60px; /* Slightly smaller swatches for tablets */
+    height: 60px;
+  }
+  
+  .back {
+    max-width: 380px; /* Tablet-optimized width */
+    padding: 22px 32px; /* Tablet padding */
+  }
+  
+  .mem {
+    font-size: 2.3rem; /* Tablet font size */
+  }
+}
+
+/* Large tablet/small desktop */
+@media (min-width: 1025px) and (max-width: 1280px) {
+  .grid-container {
+    transform: translateY(-50%) scale(0.6); /* Between tablet and desktop */
+  }
+  
+  .back {
+    max-width: 440px; /* Larger on desktop */
+    padding: 28px 40px; /* More generous padding */
+  }
+  
+  .mem {
+    font-size: 2.8rem; /* Larger text on desktop */
+  }
 }
 
 .color-swatch-group {
@@ -127,7 +188,7 @@
 
 .range-slider::-webkit-slider-thumb {
   -webkit-appearance: none;  /* Remove default styling */
-  appearance: none;          /* Remove default styling */
+  appearance: none;          /* Standard property for compatibility */
   width: 20px;               /* Width of the thumb */
   height: 20px;              /* Height of the thumb */
   border-radius: 50%;        /* Rounded thumb */
@@ -135,20 +196,79 @@
   cursor: pointer;
 }
 
-.back {
-  position: absolute;
-  top: 25%; /* Position at top area */
-  left: 50%; /* Center horizontally */
-  transform: translate(-50%, -50%); /* Adjust for perfect centering */
-  z-index: 10; /* Ensure it is above the canvas */
-  padding: 20px 30px; /* Comfortable padding */
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(147, 51, 234, 0.9)); /* Blue to purple gradient */
-  border-radius: 20px; /* More rounded corners */
+/* Force overlay to center - highest specificity */
+div.back {
+  position: fixed !important; /* Use fixed instead of absolute */
+  top: 50vh !important; /* Use viewport height for true center */
+  left: 50vw !important; /* Use viewport width for true center */
+  transform: translate(-50%, -50%) !important; /* Force perfect centering */
+  z-index: 9999 !important; /* Very high z-index */
+  padding: 40px 60px; /* More generous padding */
+  background: linear-gradient(135deg, 
+    rgba(153, 84, 203, 0.95),    /* Dark purple */
+    rgba(59, 7, 100, 0.95),     /* Deeper purple */
+    rgba(63, 12, 95, 0.95),    /* Purple */
+    rgba(67, 56, 202, 0.90)     /* Purple-indigo */
+  ); /* Dark purple gradient background */
+  border-radius: 24px; /* More rounded corners */
   pointer-events: none; /* Allow clicks to pass through */
-  max-width: 400px; /* Limit width */
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); /* Beautiful shadow */
-  backdrop-filter: blur(10px); /* Glass effect */
-  border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+  max-width: 600px; /* Wider for better presence */
+  min-height: 150px; /* More height */
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.8),
+    0 8px 32px rgba(88, 28, 135, 0.4),
+    0 4px 16px rgba(76, 29, 149, 0.3),
+    inset 0 2px 0 rgba(255, 255, 255, 0.2); /* Dark purple layered shadows */
+  backdrop-filter: blur(20px) saturate(200%); /* Enhanced glass effect */
+  border: 2px solid rgba(147, 51, 234, 0.3); /* Purple border */
+  overflow: visible; /* Allow text to be fully visible */
+  display: flex; /* Flexbox for better text centering */
+  align-items: center; /* Center text vertically */
+  justify-content: center; /* Center text horizontally */
+  animation: glow 2s ease-in-out infinite alternate, float 3s ease-in-out infinite; /* Add animations */
+}
+
+.back::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.1), 
+    rgba(255, 255, 255, 0.05), 
+    rgba(255, 255, 255, 0.1)
+  ); /* Bright accent overlay */
+  border-radius: inherit;
+  z-index: -1;
+}
+
+/* Add keyframe animations */
+@keyframes glow {
+  0% {
+    box-shadow: 
+      0 20px 60px rgba(0, 0, 0, 0.8),
+      0 8px 32px rgba(88, 28, 135, 0.4),
+      0 4px 16px rgba(76, 29, 149, 0.3),
+      inset 0 2px 0 rgba(255, 255, 255, 0.2);
+  }
+  100% {
+    box-shadow: 
+      0 25px 80px rgba(0, 0, 0, 0.9),
+      0 12px 40px rgba(88, 28, 135, 0.7),
+      0 6px 20px rgba(76, 29, 149, 0.6),
+      inset 0 2px 0 rgba(255, 255, 255, 0.3);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(-50%, -50%) translateY(0px);
+  }
+  50% {
+    transform: translate(-50%, -50%) translateY(-10px);
+  }
 }
 
 .highl {
@@ -161,19 +281,27 @@
 }
 
 .mem {
-  font-size: 2.5rem; /* Perfect size for overlay */
-  font-family: "Permanent Marker", cursive;
-  font-weight: normal;
+  font-size: 3rem; /* Larger, more prominent size */
+  font-family: 'Permanent Marker', cursive; /* Fun, hand-drawn font */
+  font-weight: 400; /* Normal weight for the marker font */
   font-style: normal;
-  color: #ffffff;
+  color: #ffffff; /* Bright white for contrast */
   text-align: center;
   margin: 0;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Text shadow for depth */
-  letter-spacing: 1px; /* Slight letter spacing */
+  letter-spacing: 0.05em; /* Slightly spaced for readability */
+  line-height: 1.2; /* Tighter line height for impact */
+  text-shadow: 
+    0 2px 6px rgba(0, 0, 0, 0.9),
+    0 1px 3px rgba(0, 0, 0, 0.7); /* Strong dark shadow for contrast */
+  background: none; /* Remove gradient for better contrast */
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: unset;
+  background-clip: unset;
+  /* Remove animation for cleaner look */
 }
 
-/* Optionally, add a hover effect */
+/* Hover effect */
 .mem:hover {
-  color: #fff; /* Highlight on hover */
+  color: #f0f0f0; /* Slightly dimmer white on hover */
   transition: color 0.3s ease-in-out; /* Smooth transition */
 }
